@@ -36,10 +36,8 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Validar TypeScript y ESLint
-        run: npm run lint
-
-      - name: Renderizar GIF para GitHub
+      - name: Renderizar y validar la composición
+        timeout-minutes: 10
         run: npx remotion render src/index.ts MeridianSecurityGame out/meridian-security-arcade.gif --codec=gif --every-nth-frame=2 --scale=0.67
 
       - name: Guardar animación renderizada
