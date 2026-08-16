@@ -65,29 +65,29 @@ Esta es la parte más técnica de la idea. Yo veo Meridian como un sistema de tu
 
 ```mermaid
 flowchart TD
-    U["Usuario"] --> UI["Meridian Chat UI"]
-    UI --> API["API Gateway"]
-    API --> CTX["Workspace Context"]
-    API --> ROUTER["Intent + Model Router"]
-    CTX --> RUNTIME["Agent Runtime"]
+    U["Usuario"] --> UI["Interfaz del chat de Meridian"]
+    UI --> API["Puerta de entrada de la API"]
+    API --> CTX["Contexto del espacio de trabajo"]
+    API --> ROUTER["Enrutador de intención y modelos"]
+    CTX --> RUNTIME["Motor de agentes"]
     ROUTER --> RUNTIME
-    RUNTIME --> POLICY["Policy Engine"]
+    RUNTIME --> POLICY["Motor de permisos"]
     POLICY --> MCP["MCP Registry"]
-    MCP --> SB["Secret Broker"]
-    SB --> GH["GitHub API"]
-    SB --> NT["Notion API"]
-    SB --> SL["Slack API"]
-    SB --> EXT["Other APIs"]
-    RUNTIME --> MEM["Memory + Company Graph"]
-    RUNTIME --> DB["Supabase / PostgreSQL"]
-    RUNTIME --> AUDIT["Audit Log"]
-    RUNTIME --> VERIFY["Verification Runner"]
+    MCP --> SB["Gestor seguro de secretos"]
+    SB --> GH["API de GitHub"]
+    SB --> NT["API de Notion"]
+    SB --> SL["API de Slack"]
+    SB --> EXT["Otras API"]
+    RUNTIME --> MEM["Memoria + Grafo de la empresa"]
+    RUNTIME --> DB["Supabase y PostgreSQL"]
+    RUNTIME --> AUDIT["Registro de auditoría"]
+    RUNTIME --> VERIFY["Motor de verificación"]
     VERIFY --> API
-    API --> STREAM["SSE Event Stream"]
+    API --> STREAM["Flujo de eventos SSE"]
     STREAM --> UI
 ```
 
-El `API Gateway` recibe la solicitud y valida la sesión. El `Intent Router` entiende lo que se quiere hacer. El `Model Router` decide qué modelo conviene usar. Después, el `Agent Runtime` prepara el contexto y solamente entrega las herramientas permitidas para esa tarea.
+El `Puerta de entrada de la API` recibe la solicitud y valida la sesión. El `Intent Router` entiende lo que se quiere hacer. El `Model Router` decide qué modelo conviene usar. Después, el `Motor de agentes` prepara el contexto y solamente entrega las herramientas permitidas para esa tarea.
 
 ## Las tuberías por dentro
 
@@ -95,39 +95,39 @@ No todas las tuberías transportan lo mismo. Separarlas ayuda a que un error no 
 
 ```mermaid
 flowchart LR
-    A["User Request"] --> B["Intent Pipe"]
-    B --> C["Context Pipe"]
-    C --> D["Tool Pipe"]
-    D --> E["Result Pipe"]
-    E --> F["Verification Pipe"]
-    F --> G["Response Pipe"]
+    A["Solicitud del usuario"] --> B["Tubería de intención"]
+    B --> C["Tubería de contexto"]
+    C --> D["Tubería de herramientas"]
+    D --> E["Tubería de resultados"]
+    E --> F["Tubería de verificación"]
+    F --> G["Tubería de respuesta"]
 ```
 
-- **Intent Pipe:** lleva la intención detectada, el agente elegido y el nivel de confianza.
-- **Context Pipe:** transporta solamente los datos autorizados del workspace.
-- **Tool Pipe:** contiene el nombre de la herramienta y los argumentos validados.
-- **Result Pipe:** devuelve datos estructurados, no un simple `ok`.
-- **Verification Pipe:** vuelve a leer el recurso para confirmar lo que pasó.
-- **Response Pipe:** convierte la evidencia en una respuesta que cualquier persona pueda entender.
+- **Tubería de intención:** lleva la intención detectada, el agente elegido y el nivel de confianza.
+- **Tubería de contexto:** transporta solamente los datos autorizados del workspace.
+- **Tubería de herramientas:** contiene el nombre de la herramienta y los argumentos validados.
+- **Tubería de resultados:** devuelve datos estructurados, no un simple `ok`.
+- **Tubería de verificación:** vuelve a leer el recurso para confirmar lo que pasó.
+- **Tubería de respuesta:** convierte la evidencia en una respuesta que cualquier persona pueda entender.
 
-## API keys sin entregárselas al agente
+## Claves de API sin entregárselas al agente
 
-Una API key es como una llave privada. Meridian puede necesitarla para abrir una conexión, pero eso no significa que el modelo tenga que verla.
+Una clave de API es como una llave privada. Meridian puede necesitarla para abrir una conexión, pero eso no significa que el modelo tenga que verla.
 
 ```mermaid
 flowchart TD
-    A["Agente solicita una acción"] --> B["Policy Check"]
+    A["Agente solicita una acción"] --> B["Comprobación de permisos"]
     B --> C{"¿Está permitida?"}
     C -->|No| D["Bloquear + registrar"]
-    C -->|Sí| E["Secret Broker"]
+    C -->|Sí| E["Gestor seguro de secretos"]
     E --> F["Credencial cifrada"]
-    F --> G["Llamada server-to-server"]
+    F --> G["Llamada entre servidores"]
     G --> H["Respuesta externa"]
-    H --> I["Sanitizer / Redaction"]
+    H --> I["Filtro y ocultación"]
     I --> J["Resultado seguro para el agente"]
 ```
 
-El agente nunca debería ejecutar `printenv`, leer un archivo `.env` o recibir un token dentro del prompt. El `Secret Broker` usa la credencial internamente y devuelve solamente el resultado necesario. Antes de regresar al agente, un `Sanitizer` elimina campos como:
+El agente nunca debería ejecutar `printenv`, leer un archivo `.env` o recibir un token dentro del prompt. El `Gestor seguro de secretos` usa la credencial internamente y devuelve solamente el resultado necesario. Antes de regresar al agente, un `Sanitizer` elimina campos como:
 
 ```text
 apiKey
@@ -141,19 +141,19 @@ connectionString
 serviceRoleKey
 ```
 
-## Cómo imagino el MCP Registry
+## Cómo imagino el Registro MCP
 
-El MCP Registry no es una lista bonita de tarjetas. Debe ser una fuente real de verdad para el chat, los agentes y el panel de integraciones.
+El Registro MCP no es una lista bonita de tarjetas. Debe ser una fuente real de verdad para el chat, los agentes y el panel de integraciones.
 
 ```mermaid
 flowchart TD
-    PANEL["Integration Panel"] --> REG["MCP Registry"]
-    CHAT["Chat + Agents"] --> REG
-    REG --> DISC["Tool Discovery"]
-    REG --> HEALTH["Health Checks"]
-    REG --> PERM["Scopes + Permissions"]
-    REG --> RATE["Rate Limits + Cost"]
-    DISC --> SERVER["MCP Servers"]
+    PANEL["Panel de integraciones"] --> REG["MCP Registry"]
+    CHAT["Chat y agentes"] --> REG
+    REG --> DISC["Descubrimiento de herramientas"]
+    REG --> HEALTH["Comprobaciones de salud"]
+    REG --> PERM["Alcances y permisos"]
+    REG --> RATE["Límites de uso y costo"]
+    DISC --> SERVER["Servidores MCP"]
     HEALTH --> SERVER
     PERM --> SERVER
     RATE --> SERVER
@@ -174,7 +174,7 @@ interface PublicMcpConnection {
   name: string;
   provider: string;
   status: McpConnectionStatus;
-  health: "healthy" | "degraded" | "unknown";
+  salud: "saludy" | "degraded" | "unknown";
   capabilities: string[];
   enabled: boolean;
   requiresApproval: boolean;
@@ -183,7 +183,7 @@ interface PublicMcpConnection {
 
 Ese contrato es público para el agente porque no contiene secretos. Los tokens, URLs privadas y credenciales viven en otra capa.
 
-## Los agentes y el Model Router
+## Los agentes y el enrutador de modelos
 
 Meridian no tiene que usar siempre el mismo modelo. Algunas tareas requieren razonamiento fuerte, otras velocidad, otras visión y otras solamente una consulta a una herramienta.
 
@@ -191,10 +191,10 @@ Meridian no tiene que usar siempre el mismo modelo. Algunas tareas requieren raz
 flowchart TD
     A["Petición"] --> B["Intent Router"]
     B --> C{"Tipo de trabajo"}
-    C -->|Código| D["Coding Agent"]
-    C -->|Investigación| E["Research Agent"]
-    C -->|Negocio| F["Business Agent"]
-    C -->|Acción interna| G["Workspace Agent"]
+    C -->|Código| D["Agente de programación"]
+    C -->|Investigación| E["Agente de investigación"]
+    C -->|Negocio| F["Agente de negocios"]
+    C -->|Acción interna| G["Agente del espacio de trabajo"]
     D --> H["Model Router"]
     E --> H
     F --> H
@@ -202,7 +202,7 @@ flowchart TD
     H --> I["OpenAI / Claude / Gemini / NVIDIA / Local"]
 ```
 
-El router puede comparar capacidad, coste, latencia, privacidad y disponibilidad. Si un proveedor falla, el sistema no debe cambiar de modelo silenciosamente cuando el usuario eligió uno específico. Si el fallback está permitido, debe quedar registrado.
+El router puede comparar capacidad, coste, latencia, privacidad y disponibilidad. Si un proveedor falla, el sistema no debe cambiar de modelo silenciosamente cuando el usuario eligió uno específico. Si el alternativa automática está permitido, debe quedar registrado.
 
 ## Memoria y Company Graph
 
@@ -214,14 +214,14 @@ flowchart TD
     B["Tareas y proyectos"] --> M
     C["CRM y equipo"] --> M
     D["Documentos y notas"] --> M
-    M --> V["Vector Search"]
+    M --> V["Búsqueda vectorial"]
     M --> G["Company Graph"]
-    V --> R["Context Retrieval"]
+    V --> R["Recuperación de contexto"]
     G --> R
     R --> AG["Agente autorizado"]
 ```
 
-La búsqueda vectorial ayuda a encontrar información relacionada. El `Company Graph` conserva relaciones: qué proyecto pertenece a qué equipo, qué tarea depende de otra y qué decisión afectó a un cliente. Todo debe estar aislado por `workspaceId`.
+La búsqueda vectorial ayuda a encontrar información relacionada. El `Company Graph` conserva relaciones: qué proyecto pertenece a qué equipo, qué tarea depende de otra y qué decisión afectó a un cliente. Todo debe estar aislado por `identificador del espacio de trabajo`.
 
 ## Lo que debe ver la interfaz mientras trabaja
 
@@ -231,8 +231,8 @@ No quiero esconder todo detrás de una animación que diga “pensando”. La in
 sequenceDiagram
     participant U as Usuario
     participant C as Chat
-    participant A as Agent Runtime
-    participant M as MCP Tool
+    participant A as Motor de agentes
+    participant M as Herramienta MCP
     participant V as Verificador
 
     U->>C: Envía una solicitud
@@ -264,11 +264,11 @@ Este fue uno de los problemas que encontré mientras construía Meridian. Una he
 
 ```mermaid
 flowchart LR
-    A["Tool Call"] --> B["Tool Result"]
-    B --> C["Sanitized Payload"]
+    A["Llamada a herramienta"] --> B["Resultado de herramienta"]
+    B --> C["Datos filtrados"]
     C --> D["tool_call_id"]
-    D --> E["Model Context"]
-    E --> F["Grounded Answer"]
+    D --> E["Contexto del modelo"]
+    E --> F["Respuesta basada en evidencia"]
 ```
 
 El `tool_call_id` une cada llamada con su respuesta. Si falta el payload, Meridian no debe inventar ni decir que el registro está vacío. Debe reportar que la evidencia no llegó y marcar la ejecución como incompleta.
