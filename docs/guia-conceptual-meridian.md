@@ -87,7 +87,7 @@ flowchart TD
     STREAM --> UI
 ```
 
-El `Puerta de entrada de la API` recibe la solicitud y valida la sesión. El `Intent Router` entiende lo que se quiere hacer. El `Model Router` decide qué modelo conviene usar. Después, el `Motor de agentes` prepara el contexto y solamente entrega las herramientas permitidas para esa tarea.
+La puerta de entrada de la API recibe la solicitud y valida la sesión. El enrutador de intención entiende lo que se quiere hacer. El enrutador de modelos decide qué modelo conviene usar. Después, el motor de agentes prepara el contexto y solamente entrega las herramientas permitidas para esa tarea.
 
 ## Las tuberías por dentro
 
@@ -189,13 +189,13 @@ Meridian no tiene que usar siempre el mismo modelo. Algunas tareas requieren raz
 
 ```mermaid
 flowchart TD
-    A["Petición"] --> B["Intent Router"]
+    A["Petición"] --> B["Enrutador de intención"]
     B --> C{"Tipo de trabajo"}
     C -->|Código| D["Agente de programación"]
     C -->|Investigación| E["Agente de investigación"]
     C -->|Negocio| F["Agente de negocios"]
     C -->|Acción interna| G["Agente del espacio de trabajo"]
-    D --> H["Model Router"]
+    D --> H["Enrutador de modelos"]
     E --> H
     F --> H
     G --> H
