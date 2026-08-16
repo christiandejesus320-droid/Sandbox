@@ -21,6 +21,9 @@ Para generar el MP4:
 ```bash
 npx remotion render MeridianResearchLab out/meridian-research-lab-1080p.mp4 --scale=0.5
 
+# Para una versión ligera para el README y navegación rápida:
+ffmpeg -i out/meridian-research-lab-1080p.mp4 -vf "scale=640:360:flags=lanczos,fps=24" -an -c:v libx264 -crf 32 -movflags +faststart out/meridian-research-lab-light.mp4
+
 # Para una salida 4K completa:
 npx remotion render MeridianResearchLab out/meridian-research-lab-4k.mp4
 ```

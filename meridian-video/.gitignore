@@ -9,3 +9,5 @@ agent
 out/*
 !out/meridian-research-lab-1080p.mp4
 !out/meridian-research-lab-4k-poster.png
+!out/meridian-research-lab-light.mp4
+!out/meridian-research-lab-preview.gif

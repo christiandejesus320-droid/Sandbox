@@ -2,14 +2,14 @@
 
 ## Video oficial de Meridian
 
-[![Ver el video oficial de Meridian](https://github.com/christiandejes320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-4k-poster.png)](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-1080p.mp4)
+[![Ver el video oficial de Meridian](https://github.com/christiandejes320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-preview.gif)](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-light.mp4)
 
-<video controls poster="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-4k-poster.png" width="100%">
-  <source src="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-1080p.mp4" type="video/mp4">
-  Tu navegador no puede reproducir este video. [Abrir el video de Meridian](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-1080p.mp4).
+<video controls poster="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-preview.gif" width="100%">
+  <source src="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-light.mp4" type="video/mp4">
+  Tu navegador no puede reproducir este video. [Abrir el video de Meridian](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-light.mp4).
 </video>
 
-[Ver el video de Meridian en MP4](meridian-video/out/meridian-research-lab-1080p.mp4) · [Leer la skill de video](skills/remotion-video/README.md)
+[Ver el video ligero de Meridian](meridian-video/out/meridian-research-lab-light.mp4) · [Leer la skill de video](skills/remotion-video/README.md)
 
 
 Este repositorio es un laboratorio público de investigación sobre agentes autónomos, Meridian API y sistemas que pueden investigar antes de construir.
