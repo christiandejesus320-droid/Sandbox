@@ -1,0 +1,55 @@
+name: Render Meridian Security Arcade
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "meridian-video/src/SecurityGame.tsx"
+      - "meridian-video/src/Root.tsx"
+      - ".github/workflows/render-security-arcade.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: meridian-security-arcade
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: meridian-video
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: meridian-video/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Validar TypeScript y ESLint
+        run: npm run lint
+
+      - name: Renderizar GIF para GitHub
+        run: npx remotion render src/index.ts MeridianSecurityGame out/meridian-security-arcade.gif --codec=gif --every-nth-frame=2 --scale=0.67
+
+      - name: Guardar animación renderizada
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add meridian-video/out/meridian-security-arcade.gif
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore(video): renderizar Security Arcade"
+          git push
