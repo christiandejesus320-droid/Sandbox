@@ -1,0 +1,11 @@
+dist
+.DS_Store
+.env
+node_modules
+build
+agent
+
+# Keep the public demo artifacts linked from the README.
+out/*
+!out/meridian-research-lab-1080p.mp4
+!out/meridian-research-lab-4k-poster.png

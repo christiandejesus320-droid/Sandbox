@@ -1,5 +1,9 @@
 # Meridian Research Lab
 
+[![Preview 4K de la demo Remotion](video-demo/out/meridian-research-lab-4k-poster.png)](video-demo/out/meridian-research-lab-1080p.mp4)
+
+[Ver la demo Remotion en MP4](video-demo/out/meridian-research-lab-1080p.mp4) · [Leer la skill de video](skills/remotion-video/README.md)
+
 Este repositorio es un laboratorio público de investigación sobre agentes autónomos, Meridian API y sistemas que pueden investigar antes de construir.
 
 La idea central es sencilla: una IA no debería limitarse a generar código a partir de sus propias suposiciones. Debería poder entender el contexto, consultar fuentes actuales, revisar herramientas disponibles, comparar opciones y mostrar sus decisiones antes de ejecutar una acción.
@@ -40,6 +44,14 @@ Este repositorio está en fase de investigación y prototipado. Los documentos d
 [Resiliencia en la selección de modelos](docs/model-selection-resilience.md) define fallbacks, timeouts, circuit breakers y criterios de degradación segura.
 
 [Implementación inicial de investigación web](docs/web-research-implementation.md) describe el primer módulo ejecutable, sus límites y sus pruebas.
+
+[Research Before Build](docs/research-before-build.md) define el flujo para investigar antes de construir aplicaciones, automatizaciones y contenido.
+
+[Remotion Video Skill](skills/remotion-video/README.md) conecta investigación, planificación de escenas, render y verificación.
+
+[Enlaces Remotion verificados](docs/remotion-verified-links.md) reúne las fuentes oficiales comprobadas antes de integrar la demo.
+
+[Meridian ecosystem verified](docs/meridian-ecosystem-verified.md) separa las capacidades públicas verificadas de las ideas que todavía están en desarrollo o en repositorios privados.
 
 ## Primera implementación
 
