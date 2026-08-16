@@ -59,6 +59,220 @@ Es el lugar donde cada persona conecta y controla sus servicios. Lo que aparece 
 
 GitHub, Notion y Slack son ejemplos. Más adelante pueden entrar calendarios, correo, almacenamiento, automatizaciones y otros servidores MCP. La idea es que Meridian pueda crecer sin perder el control.
 
+## El mapa técnico completo
+
+Esta es la parte más técnica de la idea. Yo veo Meridian como un sistema de tuberías. Por una tubería entra la petición, por otras entra el contexto permitido y por otras regresan los resultados. Ninguna conexión debería saltarse los permisos.
+
+```mermaid
+flowchart TD
+    U["Usuario"] --> UI["Meridian Chat UI"]
+    UI --> API["API Gateway"]
+    API --> CTX["Workspace Context"]
+    API --> ROUTER["Intent + Model Router"]
+    CTX --> RUNTIME["Agent Runtime"]
+    ROUTER --> RUNTIME
+    RUNTIME --> POLICY["Policy Engine"]
+    POLICY --> MCP["MCP Registry"]
+    MCP --> SB["Secret Broker"]
+    SB --> GH["GitHub API"]
+    SB --> NT["Notion API"]
+    SB --> SL["Slack API"]
+    SB --> EXT["Other APIs"]
+    RUNTIME --> MEM["Memory + Company Graph"]
+    RUNTIME --> DB["Supabase / PostgreSQL"]
+    RUNTIME --> AUDIT["Audit Log"]
+    RUNTIME --> VERIFY["Verification Runner"]
+    VERIFY --> API
+    API --> STREAM["SSE Event Stream"]
+    STREAM --> UI
+```
+
+El `API Gateway` recibe la solicitud y valida la sesión. El `Intent Router` entiende lo que se quiere hacer. El `Model Router` decide qué modelo conviene usar. Después, el `Agent Runtime` prepara el contexto y solamente entrega las herramientas permitidas para esa tarea.
+
+## Las tuberías por dentro
+
+No todas las tuberías transportan lo mismo. Separarlas ayuda a que un error no termine exponiendo información que no debía salir.
+
+```mermaid
+flowchart LR
+    A["User Request"] --> B["Intent Pipe"]
+    B --> C["Context Pipe"]
+    C --> D["Tool Pipe"]
+    D --> E["Result Pipe"]
+    E --> F["Verification Pipe"]
+    F --> G["Response Pipe"]
+```
+
+- **Intent Pipe:** lleva la intención detectada, el agente elegido y el nivel de confianza.
+- **Context Pipe:** transporta solamente los datos autorizados del workspace.
+- **Tool Pipe:** contiene el nombre de la herramienta y los argumentos validados.
+- **Result Pipe:** devuelve datos estructurados, no un simple `ok`.
+- **Verification Pipe:** vuelve a leer el recurso para confirmar lo que pasó.
+- **Response Pipe:** convierte la evidencia en una respuesta que cualquier persona pueda entender.
+
+## API keys sin entregárselas al agente
+
+Una API key es como una llave privada. Meridian puede necesitarla para abrir una conexión, pero eso no significa que el modelo tenga que verla.
+
+```mermaid
+flowchart TD
+    A["Agente solicita una acción"] --> B["Policy Check"]
+    B --> C{"¿Está permitida?"}
+    C -->|No| D["Bloquear + registrar"]
+    C -->|Sí| E["Secret Broker"]
+    E --> F["Credencial cifrada"]
+    F --> G["Llamada server-to-server"]
+    G --> H["Respuesta externa"]
+    H --> I["Sanitizer / Redaction"]
+    I --> J["Resultado seguro para el agente"]
+```
+
+El agente nunca debería ejecutar `printenv`, leer un archivo `.env` o recibir un token dentro del prompt. El `Secret Broker` usa la credencial internamente y devuelve solamente el resultado necesario. Antes de regresar al agente, un `Sanitizer` elimina campos como:
+
+```text
+apiKey
+accessToken
+refreshToken
+clientSecret
+authorization
+cookie
+password
+connectionString
+serviceRoleKey
+```
+
+## Cómo imagino el MCP Registry
+
+El MCP Registry no es una lista bonita de tarjetas. Debe ser una fuente real de verdad para el chat, los agentes y el panel de integraciones.
+
+```mermaid
+flowchart TD
+    PANEL["Integration Panel"] --> REG["MCP Registry"]
+    CHAT["Chat + Agents"] --> REG
+    REG --> DISC["Tool Discovery"]
+    REG --> HEALTH["Health Checks"]
+    REG --> PERM["Scopes + Permissions"]
+    REG --> RATE["Rate Limits + Cost"]
+    DISC --> SERVER["MCP Servers"]
+    HEALTH --> SERVER
+    PERM --> SERVER
+    RATE --> SERVER
+```
+
+Cada conexión debería tener un contrato parecido a este:
+
+```ts
+type McpConnectionStatus =
+  | "connected"
+  | "degraded"
+  | "disabled"
+  | "configuration_required"
+  | "error";
+
+interface PublicMcpConnection {
+  id: string;
+  name: string;
+  provider: string;
+  status: McpConnectionStatus;
+  health: "healthy" | "degraded" | "unknown";
+  capabilities: string[];
+  enabled: boolean;
+  requiresApproval: boolean;
+}
+```
+
+Ese contrato es público para el agente porque no contiene secretos. Los tokens, URLs privadas y credenciales viven en otra capa.
+
+## Los agentes y el Model Router
+
+Meridian no tiene que usar siempre el mismo modelo. Algunas tareas requieren razonamiento fuerte, otras velocidad, otras visión y otras solamente una consulta a una herramienta.
+
+```mermaid
+flowchart TD
+    A["Petición"] --> B["Intent Router"]
+    B --> C{"Tipo de trabajo"}
+    C -->|Código| D["Coding Agent"]
+    C -->|Investigación| E["Research Agent"]
+    C -->|Negocio| F["Business Agent"]
+    C -->|Acción interna| G["Workspace Agent"]
+    D --> H["Model Router"]
+    E --> H
+    F --> H
+    G --> H
+    H --> I["OpenAI / Claude / Gemini / NVIDIA / Local"]
+```
+
+El router puede comparar capacidad, coste, latencia, privacidad y disponibilidad. Si un proveedor falla, el sistema no debe cambiar de modelo silenciosamente cuando el usuario eligió uno específico. Si el fallback está permitido, debe quedar registrado.
+
+## Memoria y Company Graph
+
+No quiero una memoria que mezcle todo sin control. Meridian debe separar conversaciones, proyectos, decisiones y conocimiento de la empresa.
+
+```mermaid
+flowchart TD
+    A["Conversaciones"] --> M["Memory Layer"]
+    B["Tareas y proyectos"] --> M
+    C["CRM y equipo"] --> M
+    D["Documentos y notas"] --> M
+    M --> V["Vector Search"]
+    M --> G["Company Graph"]
+    V --> R["Context Retrieval"]
+    G --> R
+    R --> AG["Agente autorizado"]
+```
+
+La búsqueda vectorial ayuda a encontrar información relacionada. El `Company Graph` conserva relaciones: qué proyecto pertenece a qué equipo, qué tarea depende de otra y qué decisión afectó a un cliente. Todo debe estar aislado por `workspaceId`.
+
+## Lo que debe ver la interfaz mientras trabaja
+
+No quiero esconder todo detrás de una animación que diga “pensando”. La interfaz debe mostrar estados operativos reales sin revelar el razonamiento privado del modelo.
+
+```mermaid
+sequenceDiagram
+    participant U as Usuario
+    participant C as Chat
+    participant A as Agent Runtime
+    participant M as MCP Tool
+    participant V as Verificador
+
+    U->>C: Envía una solicitud
+    C->>A: Contexto autorizado
+    A-->>C: Agente seleccionado
+    A->>M: Ejecutar tool
+    M-->>A: Resultado estructurado
+    A->>V: Verificar resultado
+    V-->>A: Evidencia confirmada
+    A-->>C: Respuesta final
+    C-->>U: Resultado + estado
+```
+
+Por SSE o WebSocket pueden viajar eventos pequeños:
+
+```json
+{"type":"agent.selected","agent":"integrations"}
+{"type":"tool.started","tool":"mcp.list_connections"}
+{"type":"tool.completed","success":true,"count":7}
+{"type":"verification.completed","passed":true}
+{"type":"response.completed"}
+```
+
+Eso permite que el usuario vea movimiento real: qué agente entró, qué herramienta se ejecutó y si el resultado fue verificado.
+
+## Regla importante: nunca quedarse solamente con ok
+
+Este fue uno de los problemas que encontré mientras construía Meridian. Una herramienta puede terminar sin lanzar errores y aun así el modelo no recibir los datos. Para mí, `ok: true` significa únicamente que la ejecución terminó. El resultado completo y sanitizado debe viajar por la tubería hasta el modelo.
+
+```mermaid
+flowchart LR
+    A["Tool Call"] --> B["Tool Result"]
+    B --> C["Sanitized Payload"]
+    C --> D["tool_call_id"]
+    D --> E["Model Context"]
+    E --> F["Grounded Answer"]
+```
+
+El `tool_call_id` une cada llamada con su respuesta. Si falta el payload, Meridian no debe inventar ni decir que el registro está vacío. Debe reportar que la evidencia no llegó y marcar la ejecución como incompleta.
+
 ## Cómo debería completarse una tarea
 
 ```mermaid
