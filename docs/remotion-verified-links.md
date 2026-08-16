@@ -1,6 +1,6 @@
 # Remotion verified links
 
-Estos enlaces fueron verificados directamente antes de preparar la demo.
+Estos enlaces fueron verificados directamente antes de preparar el video de Meridian.
 
 | Enlace | Qué confirma |
 |---|---|

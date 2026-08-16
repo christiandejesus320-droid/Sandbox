@@ -12,15 +12,15 @@ La tecnología visible en el perfil incluye Next.js, React, TypeScript, Tailwind
 
 El repositorio público `Meridian-Design-2v1` muestra páginas de ecosistema, chat de Meridian, funciones Netlify, archivos de integración con Supabase, un globo de actividad en tiempo real, un shop de NOVAXCO y recursos visuales de Meridian.
 
-## Cómo se representa en la demo
+## Cómo se representa en el video
 
-La demo utiliza estas capacidades como elementos narrativos: Code Agent para transformar una idea en una aplicación verificable; The Librarian para routing semántico, skills y tools; Voice Engine para conversación y estado; y el Ecosystem Hub para conectar productos, datos e integraciones.
+El video utiliza estas capacidades como elementos narrativos: Code Agent para transformar una idea en una aplicación verificable; The Librarian para routing semántico, skills y tools; Voice Engine para conversación y estado; y el Ecosystem Hub para conectar productos, datos e integraciones.
 
 Los iconos de laptop, microchip y cohete son metáforas visuales high-end. No se presentan como productos independientes ni como assets existentes del repositorio.
 
 ## Límites
 
-Los repositorios `meridian-api`, `meridian-skills`, `meridian-completo`, `meridian-investor-intelligence` y `-meridian-showcase` aparecen como privados o no son verificables públicamente desde la sesión de consulta. La demo no afirma detalles internos de esos repositorios.
+Los repositorios `meridian-api`, `meridian-skills`, `meridian-completo`, `meridian-investor-intelligence` y `-meridian-showcase` aparecen como privados o no son verificables públicamente desde la sesión de consulta. El video no afirma detalles internos de esos repositorios.
 
 ## Referencias verificadas
 

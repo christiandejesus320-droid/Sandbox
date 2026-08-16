@@ -1,8 +1,14 @@
 # Meridian Research Lab
 
-[![Preview 4K de la demo Remotion](video-demo/out/meridian-research-lab-4k-poster.png)](video-demo/out/meridian-research-lab-1080p.mp4)
+## Video oficial de Meridian
 
-[Ver la demo Remotion en MP4](video-demo/out/meridian-research-lab-1080p.mp4) · [Leer la skill de video](skills/remotion-video/README.md)
+<video controls poster="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-4k-poster.png" width="100%">
+  <source src="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-1080p.mp4" type="video/mp4">
+  Tu navegador no puede reproducir este video. [Abrir el video de Meridian](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-1080p.mp4).
+</video>
+
+[Ver el video de Meridian en MP4](meridian-video/out/meridian-research-lab-1080p.mp4) · [Leer la skill de video](skills/remotion-video/README.md)
+
 
 Este repositorio es un laboratorio público de investigación sobre agentes autónomos, Meridian API y sistemas que pueden investigar antes de construir.
 
@@ -49,7 +55,7 @@ Este repositorio está en fase de investigación y prototipado. Los documentos d
 
 [Remotion Video Skill](skills/remotion-video/README.md) conecta investigación, planificación de escenas, render y verificación.
 
-[Enlaces Remotion verificados](docs/remotion-verified-links.md) reúne las fuentes oficiales comprobadas antes de integrar la demo.
+[Enlaces Remotion verificados](docs/remotion-verified-links.md) reúne las fuentes oficiales comprobadas antes de integrar el video.
 
 [Meridian ecosystem verified](docs/meridian-ecosystem-verified.md) separa las capacidades públicas verificadas de las ideas que todavía están en desarrollo o en repositorios privados.
 
