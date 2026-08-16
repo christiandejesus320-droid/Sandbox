@@ -2,6 +2,8 @@
 
 ## Video oficial de Meridian
 
+[![Ver el video oficial de Meridian](https://github.com/christiandejes320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-4k-poster.png)](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-1080p.mp4)
+
 <video controls poster="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-4k-poster.png" width="100%">
   <source src="https://github.com/christiandejesus320-droid/Sandbox/raw/main/meridian-video/out/meridian-research-lab-1080p.mp4" type="video/mp4">
   Tu navegador no puede reproducir este video. [Abrir el video de Meridian](https://github.com/christiandejesus320-droid/Sandbox/blob/main/meridian-video/out/meridian-research-lab-1080p.mp4).
