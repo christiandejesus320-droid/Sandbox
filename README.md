@@ -53,6 +53,10 @@ Este repositorio está en fase de investigación y prototipado. Los documentos d
 
 [Meridian ecosystem verified](docs/meridian-ecosystem-verified.md) separa las capacidades públicas verificadas de las ideas que todavía están en desarrollo o en repositorios privados.
 
+[Source evidence](docs/source-evidence.md) explica cómo distinguir una candidata a fuente oficial de una fuente realmente verificada.
+
+[GitHub achievement plan](docs/github-achievement-plan.md) registra qué logros son alcanzables mediante trabajo real y cuáles dependen de terceros.
+
 ## Primera implementación
 
 La primera capacidad ejecutable está en `src/meridian_research/query_plan.py`. Prepara planes deterministas de consulta y valida fuentes sin llamar todavía a un proveedor externo. Las pruebas se ejecutan con `pytest`.
