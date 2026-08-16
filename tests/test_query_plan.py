@@ -48,3 +48,31 @@ def test_plan_deduplicates_sources() -> None:
     plan.add_source(source)
 
     assert plan.sources == [source]
+
+
+from meridian_research import assess_source
+
+
+def test_assess_source_marks_verified_domain_candidate() -> None:
+    assessment = assess_source(
+        "https://modelcontextprotocol.io/specification",
+        official_domains=("modelcontextprotocol.io",),
+    )
+
+    assert assessment.host == "modelcontextprotocol.io"
+    assert assessment.is_secure is True
+    assert assessment.is_official_domain is True
+    assert assessment.reason == "secure official-domain candidate"
+
+
+def test_assess_source_keeps_third_party_reviewable() -> None:
+    assessment = assess_source("https://example.com/research")
+
+    assert assessment.is_secure is True
+    assert assessment.is_official_domain is False
+    assert "provenance review" in assessment.reason
+
+
+def test_assess_source_never_accepts_relative_urls() -> None:
+    with pytest.raises(ValueError, match="absolute http"):
+        assess_source("/local/file.md")
