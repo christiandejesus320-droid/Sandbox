@@ -39,6 +39,12 @@ Este repositorio está en fase de investigación y prototipado. Los documentos d
 
 [Resiliencia en la selección de modelos](docs/model-selection-resilience.md) define fallbacks, timeouts, circuit breakers y criterios de degradación segura.
 
+[Implementación inicial de investigación web](docs/web-research-implementation.md) describe el primer módulo ejecutable, sus límites y sus pruebas.
+
+## Primera implementación
+
+La primera capacidad ejecutable está en `src/meridian_research/query_plan.py`. Prepara planes deterministas de consulta y valida fuentes sin llamar todavía a un proveedor externo. Las pruebas se ejecutan con `pytest`.
+
 ## Próximas skills
 
 Las próximas skills serán pequeñas capacidades versionadas que puedan ser descubiertas por un agente y cargadas solo cuando la tarea las necesite. Entre las primeras propuestas están la búsqueda web con fuentes, la lectura de documentación, el análisis de repositorios, la planificación de cambios, la verificación visual y la selección resiliente de modelos.
