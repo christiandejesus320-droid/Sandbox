@@ -39,6 +39,8 @@ Este repositorio está en fase de investigación y prototipado. Los documentos d
 
 ## Documentos principales
 
+[Guía conceptual de Meridian](docs/guia-conceptual-meridian.md) explica con mis propias palabras cómo funciona Meridian, qué límites debe respetar y cómo puede colaborar cualquier persona interesada.
+
 [Arquitectura de Meridian API](docs/meridian-api-architecture.md) explica las capas de contexto, routing, herramientas y verificación.
 
 [Federated Model Ensemble](docs/federated-model-ensemble.md) presenta una propuesta para seleccionar modelos de acuerdo con las características de cada tarea.
