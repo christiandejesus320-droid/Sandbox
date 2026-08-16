@@ -1,3 +1,11 @@
+<div align="center">
+  <a href="https://github.com/christiandejesus320-droid/Sandbox/blob/main/docs/guia-conceptual-meridian.md">
+    <img src="https://raw.githubusercontent.com/christiandejesus320-droid/Sandbox/main/meridian-video/out/meridian-security-arcade.gif" width="820" alt="Meridian Security Arcade: mapa visual de las capas de protección de Meridian" />
+  </a>
+  <br />
+  <a href="docs/guia-conceptual-meridian.md"><strong>EXPLORAR EL MAPA COMPLETO DE MERIDIAN →</strong></a>
+</div>
+
 # Meridian Research Lab
 
 ## Video oficial de Meridian
